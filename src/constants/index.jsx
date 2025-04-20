@@ -1,3 +1,3 @@
 export const button = {
-    styles: 'text-black'
+    styles: 'text-white'
 }
