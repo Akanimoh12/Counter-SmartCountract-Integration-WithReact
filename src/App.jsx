@@ -1,57 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import CounterDisplay from './components/CounterDisplay';
-import IncrementButton from './components/IncrementButton';
-import DecrementButton from './components/DecrementButton';
-import SetCountForm from './components/SetCountForm';
-import contractABI from './components/contractABI.json';
+import React, { useState } from "react";
+import { ethers } from "ethers";
+import CounterDisplay from "./components/CounterDisplay";
+import IncrementButton from "./components/IncrementButton";
+import DecrementButton from "./components/DecrementButton";
+import SetCountForm from "./components/SetCountForm";
+import contractABI from "./components/contractABI.json";
 
-const contractAddress = '0xYourContractAddressHere'; // Replace with your deployed address
+const contractAddress = "0xc0804771e613CBd3257D7A1Ded9737BEDe92a2f1"; // Replace with your deployed address
 
 function App() {
   const [provider, setProvider] = useState(null);
   const [contract, setContract] = useState(null);
-  const [account, setAccount] = useState('');
+  const [account, setAccount] = useState("");
   const [count, setCount] = useState(0);
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  // Connect to wallet and set up contract
-  useEffect(() => {
-    const connectWallet = async () => {
-      if (window.ethereum) {
-        try {
-          // Request account access via MetaMask
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          setProvider(provider);
-          const signer = provider.getSigner();
-          const contract = new ethers.Contract(contractAddress, contractABI, signer);
-          setContract(contract);
-          const accounts = await provider.listAccounts();
-          setAccount(accounts[0]);
-          // Fetch initial count
-          const currentCount = await contract.count();
-          setCount(currentCount.toNumber());
-        } catch (error) {
-          console.error('Failed to connect wallet:', error);
-        }
-      } else {
-        alert('Please install MetaMask!');
+  // Connect to wallet
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== "undefined") {
+      setIsConnecting(true);
+      try {
+        // Request account access via MetaMask
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const provider = new ethers.BrowserProvider(window.ethereum); // Use BrowserProvider for ethers v6
+        setProvider(provider);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+        setContract(contract);
+        const address = await signer.getAddress();
+        setAccount(address);
+        // Fetch initial count
+        const currentCount = await contract.count();
+        setCount(Number(currentCount)); // Use Number() for BigNumber in ethers v6
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+        alert("Failed to connect wallet: " + error.message);
+      } finally {
+        setIsConnecting(false);
       }
-    };
-    connectWallet();
-  }, []);
+    } else {
+      alert("Please install MetaMask!");
+      setIsConnecting(false);
+    }
+  };
 
   // Function to update count after transactions
   const updateCount = async () => {
     if (contract) {
       const currentCount = await contract.count();
-      setCount(currentCount.toNumber());
+      setCount(Number(currentCount)); // Use Number() for BigNumber
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold mb-4">Counter DApp</h1>
+    <div className="flex flex-col items-center bg-linear-to-bl from-gray-800 to-pink-950 justify-center min-h-screen bg-gray-100">
+      <h1 className=" text-white text-3xl font-bold mb-4">Counter dApp</h1>
       {account ? (
         <>
           <p className="mb-2 text-sm">Connected account: {account}</p>
@@ -63,7 +70,18 @@ function App() {
           <SetCountForm contract={contract} updateCount={updateCount} />
         </>
       ) : (
-        <p className="text-red-500">Please connect your wallet.</p>
+        <div className="text-center">
+          <p className="text-red-500 mb-4">Please connect your wallet.</p>
+          <button
+            onClick={connectWallet}
+            disabled={isConnecting}
+            className={`px-4 py-2 text-white rounded ${
+              isConnecting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            {isConnecting ? "Connecting..." : "Connect Wallet"}
+          </button>
+        </div>
       )}
     </div>
   );
