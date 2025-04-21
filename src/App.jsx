@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ethers } from "ethers";
+import { CiWallet } from "react-icons/ci";
 import CounterDisplay from "./components/CounterDisplay";
 import IncrementButton from "./components/IncrementButton";
 import DecrementButton from "./components/DecrementButton";
@@ -58,28 +59,33 @@ function App() {
 
   return (
     <div className="flex flex-col items-center bg-linear-to-bl from-gray-800 to-pink-950 justify-center min-h-screen bg-gray-100">
-      <h1 className=" text-white text-3xl font-bold mb-4">Counter dApp</h1>
+      
       {account ? (
         <>
-          <p className="mb-2 text-sm">Connected account: {account}</p>
+        <div>
+        <p className="mb-2 text-sm">Connected account: {account}</p>
           <CounterDisplay count={count} />
           <div className="mt-4 space-x-2">
             <IncrementButton contract={contract} updateCount={updateCount} />
             <DecrementButton contract={contract} updateCount={updateCount} />
           </div>
           <SetCountForm contract={contract} updateCount={updateCount} />
+        </div>
+          
         </>
       ) : (
         <div className="text-center">
-          <p className="text-red-500 mb-4">Please connect your wallet.</p>
+          <h1 className={`text-white text-4xl font-bold mb-4`}>Counter dApp</h1> 
+          <p className="text-red-500 mb-4 vibrate-1 ">Please connect wallet </p>
           <button
             onClick={connectWallet}
-            disabled={isConnecting}
-            className={`px-4 py-2 text-white rounded ${
-              isConnecting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+            disabled={isConnecting} 
+            className={`shake-top pulsate-fwd m-auto py-2 text-white border-2 rounded-2xl px-6 bg-linear-to-bl from-gray-800 to-gray-900 flex items-center gap-1.5  cursor-pointer ${
+              isConnecting ? "bg-red-600" : ""
             }`}
           >
-            {isConnecting ? "Connecting..." : "Connect Wallet"}
+            <CiWallet className="text-white text-2xl font-bold " />
+            {isConnecting ? "Connecting..." : "Connect Wallet"}           
           </button>
         </div>
       )}
