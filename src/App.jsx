@@ -62,14 +62,28 @@ function App() {
       
       {account ? (
         <>
-        <div>
-        <p className="mb-2 text-sm">Connected account: {account}</p>
+        <div className="p-3.5 rounded-2xl w-full sm:w-[300px] sm:border-[1px] border-gray-500 ">
+
+          <div className=" w-full items-center text-gray-400  ">
+            <p className="bg-white w-fit text-black px-2 rounded-2xl flex items-center gap-1.5 pulsate-fwd ">
+              Connected
+              <div className="pulsate-fwd w-2.5 h-2.5 bg-green-400 rounded-full">
+
+              </div>
+            </p>
+            {/* <CiWallet className="text-white text-4xl font-bold " /> */}
+            <p className=" mt-1.5 text-xl w-full overflow-hidden "> {account}</p>
+          </div>
+        
           <CounterDisplay count={count} />
-          <div className="mt-4 space-x-2">
-            <IncrementButton contract={contract} updateCount={updateCount} />
+
+          <div className="mt-4 space-y-2">
+            <IncrementButton contract={contract} updateCount={updateCount}  />
             <DecrementButton contract={contract} updateCount={updateCount} />
           </div>
+
           <SetCountForm contract={contract} updateCount={updateCount} />
+
         </div>
           
         </>

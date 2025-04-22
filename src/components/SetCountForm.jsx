@@ -21,11 +21,11 @@ function SetCountForm({ contract, updateCount }) {
         type="number"
         value={newCount}
         onChange={(e) => setNewCount(e.target.value)}
-        placeholder="Set new count"
-        className="px-2 py-1 border rounded"
+        placeholder="Input Count"
+        className="bg-gray-300 border border-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-none dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
       />
       <button
-        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-600 w-full"
         onClick={handleSetCount}
       >
         Set Count
