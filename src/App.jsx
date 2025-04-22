@@ -62,7 +62,7 @@ function App() {
       
       {account ? (
         <>
-        <div className="p-3.5 rounded-2xl w-full sm:w-[300px] sm:border-[1px] border-gray-500 ">
+        <div className="p-8   rounded-2xl w-full sm:w-[300px] sm:border-[1px] border-gray-500 ">
 
           <div className=" w-full items-center text-gray-400  ">
             <p className="bg-white w-fit text-black px-2 rounded-2xl flex items-center gap-1.5 pulsate-fwd ">
